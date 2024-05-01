@@ -1,0 +1,24 @@
+The following info found for the robot
+
+LINE SENSOR
+The five line sensors face downward and can
+help the Zumo distinguish between light and
+dark surfaces.
+
+
+PROXIMITY SENSORS
+The proximity sensors, like the line sensors, detect reflected IR light, 
+but they are designed to only detect light that is turned on and off quickly at a frequency of 38 kHz
+
+The proximity sensors are named after the directions they face: left, right, or front. 
+In schematics and diagrams, they are referred to as LEFT, RIGHT, and FRONT.
+
+On the front sensor array, their signals are labeled LFT, FRONT, and RGT
+
+
+
+
+
+
+
+
