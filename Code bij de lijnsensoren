@@ -10,12 +10,9 @@
   #include <Zumo32U4.h>
 
   // Change next line to this if you are using the older Zumo 32U4
-  // with a black and green LCD display:
-  // Zumo32U4LCD display;
-  Zumo32U4OLED display;
+  
 
   Zumo32U4LineSensors lineSensors;
-  Zumo32U4ProximitySensors proxSensors;
 
   uint16_t lineSensorValues[5] = { 0, 0, 0, 0, 0 };
 
@@ -46,20 +43,15 @@
   void calibrateLineSensors() 
   {
     // To indicate we are in calibration mode, turn on the yellow LED
-    // and print "Line cal" on the display.
     ledYellow(1);
-    display.clear();
-    display.print(F("Line cal"));
+   
 
     for (uint16_t i = 0; i < 400; i++)
     {
-      display.gotoXY(0, 1);
-      display.print(i);
       lineSensors.calibrate();
     }
 
     ledYellow(0);
-    display.clear();
   }
 
   void loadCustomCharacters()
@@ -80,22 +72,6 @@
   {
     if (height > 8) { height = 8; }
     const char barChars[] = {' ', 0, 1, 2, 3, 4, 5, 6, (char)255};
-    display.print(barChars[height]);
-  }
-
-  // Prints a bar graph showing all the sensor readings on the display.
-  void printReadingsToDisplay()
-  {
-
-    // On the second line of the display, show line sensor readings.
-    // These calibrated sensor readings are between 0 and 1000, so
-    // we use the map function to rescale it to 0 through 8.
-    display.gotoXY(0, 1);
-    for (uint8_t i = 0; i < 5; i++)
-    {
-      uint8_t barHeight = map(lineSensorValues[i], 0, 1000, 0, 8);
-      printBar(barHeight);
-    }
   }
 
   // Prints a line with all the sensor readings to the serial
@@ -124,8 +100,8 @@
       // Read the line sensors.
       lineSensors.readCalibrated(lineSensorValues);
 
-      // Send the results to the display and to the serial monitor.
-      printReadingsToDisplay();
+      // Send the results to the serial monitor.
+     
       printReadingsToSerial();
     }
   }
