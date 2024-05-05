@@ -8,7 +8,7 @@
 
   #include <Wire.h>
   #include <Zumo32U4.h>
-
+  #define xbee Serial1
   // Change next line to this if you are using the older Zumo 32U4
   
 
@@ -56,7 +56,7 @@
       lineSensorValues[1],
       lineSensorValues[2]
     );
-    Serial.print(buffer);
+    xbee.print(buffer);
   }
 
   void loop()
