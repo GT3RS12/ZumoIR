@@ -1,3 +1,11 @@
+  /** This example shows how to read from the five line sensors and
+  three proximity sensors on the Zumo32U4 Front Sensor Array and
+  documents the different options available for configuring those
+  sensors.
+
+  The sensor readings are shown on the display and also printed to
+  the serial monitor. */
+
   #include <Wire.h>
   #include <Zumo32U4.h>
 
@@ -17,12 +25,9 @@
 
     /* Configuration 1:
     * - 3 line sensors (1, 3, 5)
-
+    */
     lineSensors.initThreeSensors();
   
-
-  
-    loadCustomCharacters();
 
     calibrateLineSensors();
   }
