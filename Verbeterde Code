@@ -1,0 +1,129 @@
+/** This example shows how to read from the five line sensors and
+three proximity sensors on the Zumo32U4 Front Sensor Array and
+documents the different options available for configuring those
+sensors.
+
+The sensor readings are shown on the display and also printed to
+the serial monitor. */
+
+#include <Wire.h>
+#include <Zumo32U4.h>
+
+// Change next line to this if you are using the older Zumo 32U4
+// with a black and green LCD display:
+// Zumo32U4LCD display;
+Zumo32U4OLED display;
+
+Zumo32U4LineSensors lineSensors;
+Zumo32U4ProximitySensors proxSensors;
+
+uint16_t lineSensorValues[5] = { 0, 0, 0, 0, 0 };
+
+bool proxLeftActive;
+bool proxFrontActive;
+bool proxRightActive;
+
+void setup()
+{
+
+  lineSensors.initThreeSensors();
+ 
+
+  loadCustomCharacters();
+
+  calibrateLineSensors();
+}
+
+// This function calibrates the line sensors for about 10
+// seconds.  During this time, you should move the robot around
+// manually so that each of its line sensors sees a full black
+// surface and a full white surface.  For the best calibration
+// results, you should also avoid exposing the sensors to
+// abnormal conditions during this time.
+void calibrateLineSensors()
+{
+  // To indicate we are in calibration mode, turn on the yellow LED
+  // and print "Line cal" on the display.
+  ledYellow(1);
+  display.clear();
+  display.print(F("Line cal"));
+
+  for (uint16_t i = 0; i < 400; i++)
+  {
+    display.gotoXY(0, 1);
+    display.print(i);
+    lineSensors.calibrate();
+  }
+
+  ledYellow(0);
+  display.clear();
+}
+
+void loadCustomCharacters()
+{
+  static const char levels[] PROGMEM = {
+    0, 0, 0, 0, 0, 0, 0, 63, 63, 63, 63, 63, 63, 63
+  };
+  display.loadCustomCharacter(levels + 0, 0);  // 1 bar
+  display.loadCustomCharacter(levels + 1, 1);  // 2 bars
+  display.loadCustomCharacter(levels + 2, 2);  // 3 bars
+  display.loadCustomCharacter(levels + 3, 3);  // 4 bars
+  display.loadCustomCharacter(levels + 4, 4);  // 5 bars
+  display.loadCustomCharacter(levels + 5, 5);  // 6 bars
+  display.loadCustomCharacter(levels + 6, 6);  // 7 bars
+}
+
+void printBar(uint8_t height)
+{
+  if (height > 8) { height = 8; }
+  const char barChars[] = {' ', 0, 1, 2, 3, 4, 5, 6, (char)255};
+  display.print(barChars[height]);
+}
+
+// Prints a bar graph showing all the sensor readings on the display.
+void printReadingsToDisplay()
+{
+
+  // On the second line of the display, show line sensor readings.
+  // These calibrated sensor readings are between 0 and 1000, so
+  // we use the map function to rescale it to 0 through 8.
+  display.gotoXY(0, 1);
+  for (uint8_t i = 0; i < 5; i++)
+  {
+    uint8_t barHeight = map(lineSensorValues[i], 0, 1000, 0, 8);
+    printBar(barHeight);
+  }
+
+}
+
+// Prints a line with all the sensor readings to the serial
+// monitor.
+void printReadingsToSerial()
+{
+  static char buffer[80];
+  sprintf(buffer, "%4d %4d %4d %4d %4d\n",
+    lineSensorValues[0],
+    lineSensorValues[1],
+    lineSensorValues[2],
+    lineSensorValues[3],
+    lineSensorValues[4]
+  );
+  Serial.print(buffer);
+}
+
+void loop()
+{
+  static uint16_t lastSampleTime = 0;
+
+  if ((uint16_t)(millis() - lastSampleTime) >= 100)
+  {
+    lastSampleTime = millis();
+
+    // Read the line sensors.
+    lineSensors.readCalibrated(lineSensorValues);
+
+    // Send the results to the display and to the serial monitor.
+    printReadingsToDisplay();
+    printReadingsToSerial();
+  }
+}
