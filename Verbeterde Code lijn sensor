@@ -8,20 +8,15 @@ the serial monitor. */
 
 #include <Wire.h>
 #include <Zumo32U4.h>
+#define xbee Serial1
 
-// Change next line to this if you are using the older Zumo 32U4
-// with a black and green LCD display:
 // Zumo32U4LCD display;
 Zumo32U4OLED display;
-
 Zumo32U4LineSensors lineSensors;
-Zumo32U4ProximitySensors proxSensors;
+
 
 uint16_t lineSensorValues[5] = { 0, 0, 0, 0, 0 };
 
-bool proxLeftActive;
-bool proxFrontActive;
-bool proxRightActive;
 
 void setup()
 {
@@ -101,14 +96,12 @@ void printReadingsToDisplay()
 void printReadingsToSerial()
 {
   static char buffer[80];
-  sprintf(buffer, "%4d %4d %4d %4d %4d\n",
+  sprintf(buffer, "%4d %4d %4d \n",
     lineSensorValues[0],
     lineSensorValues[1],
-    lineSensorValues[2],
-    lineSensorValues[3],
-    lineSensorValues[4]
+    lineSensorValues[2]
   );
-  Serial.print(buffer);
+  xbee.print(buffer);
 }
 
 void loop()
