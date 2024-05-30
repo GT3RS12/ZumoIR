@@ -7,7 +7,7 @@ Zumo32U4OLED display;
 Zumo32U4LineSensors lineSensors;
 
 
-uint16_t lineSensorValues[5] = { 0, 0, 0, 0, 0 };
+uint16_t lineSensorValues[5] = { 0, 0, 0};
 
 
 void setup()
@@ -15,10 +15,10 @@ void setup()
 //lijnsensoren instellen/declareren
   lineSensors.initThreeSensors();
  
-
   loadCustomCharacters();
 //lijnsensoren calibreren.
   calibrateLineSensors();
+
 }
 
 
@@ -40,20 +40,22 @@ void calibrateLineSensors()
   display.clear();
 }
 
-void loadCustomCharacters()
-{
-  static const char levels[] PROGMEM = {
-    0, 0, 0, 0, 0, 0, 0, 63, 63, 63, 63, 63, 63, 63
-  };
-  display.loadCustomCharacter(levels + 0, 0);  // 1 bar
-  display.loadCustomCharacter(levels + 1, 1);  // 2 bars
-  display.loadCustomCharacter(levels + 2, 2);  // 3 bars
-  display.loadCustomCharacter(levels + 3, 3);  // 4 bars
-  display.loadCustomCharacter(levels + 4, 4);  // 5 bars
-  display.loadCustomCharacter(levels + 5, 5);  // 6 bars
-  display.loadCustomCharacter(levels + 6, 6);  // 7 bars
-}
+//NOGMAALS DIT IS OOK VOOR DE DISPLAY MAAR WE HEBBEN GEEN DISPLAY.
+  void loadCustomCharacters()
+  {
+    static const char levels[] PROGMEM = {
+      0, 0, 0, 0, 0, 0, 0, 63, 63, 63, 63, 63, 63, 63
+    };
+    display.loadCustomCharacter(levels + 0, 0);  // 1 bar
+    display.loadCustomCharacter(levels + 1, 1);  // 2 bars
+    display.loadCustomCharacter(levels + 2, 2);  // 3 bars
+    display.loadCustomCharacter(levels + 3, 3);  // 4 bars
+    display.loadCustomCharacter(levels + 4, 4);  // 5 bars
+    display.loadCustomCharacter(levels + 5, 5);  // 6 bars
+    display.loadCustomCharacter(levels + 6, 6);  // 7 bars
+  }
 
+//WIJ HEBBEN GEEN DISPLAY MAAR DIT MOET IN DE CODE BLIJVEN OM HET CODE BIJ DE ZUMO ROBOT WERKEND KUNNEN KRIJGEN.
 void printBar(uint8_t height)
 {
   if (height > 8) { height = 8; }
@@ -61,7 +63,8 @@ void printBar(uint8_t height)
   display.print(barChars[height]);
 }
 
-// Prints a bar graph showing all the sensor readings on the display.
+// Prints a bar graph showing all the sensor readings on the display. WIJ HEBBEN GEEN DISPLAY THIS DIT DOET NIET
+// IK HEB DEZE IN DE CODE WANT ANDERS ZIJN ER GEEN WAARDES GEPRINT BIJ DE SERIELE POORT.
 void printReadingsToDisplay()
 {
 
@@ -87,6 +90,9 @@ void printReadingsToSerial()
   );
   xbee.print(buffer);
 }
+
+
+//schrijf je wat je wil bereiken.
 
 void loop()
 {
